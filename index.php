@@ -2,6 +2,7 @@
 <html>
 
 <head>
+    <meta charset="UTF-8">
     <title>Simple Map</title>
     <script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
     <!-- CSS only -->
@@ -25,51 +26,39 @@
 
     <script type="text/javascript" src="functions.js"></script>
 
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
 
 </head>
+<!--<body>-->
+<body>
 
-<body style="height: 100%">
-<style>
-    .mul-select {
-        width: 100%;
-    }
-</style>
+<div class="alert alert-danger" id="toast-warning">
+    <div class="toast-header d-inline-block " id="toast-header-warning">
+        <strong class="mr-auto text-primary d-block">Warning</strong>
+    </div>
+    <div class="toast-body">
+        <p><strong></strong></p>
+    </div>
+</div>
 
-<div id="popUp">
+<div id="popUp" class="pop-up">
     <form id="form">
         <div class="container">
             <h4>Save Location</h4>
             <hr>
             <h6>Tags</h6>
             <div class="row">
-                <div class="col-md-4">
-                    <input type="checkbox" checked id="hotel" value="0">
-                    <label for="hotel">Hotel</label>
-                </div>
-                <div class="col-md-8">
-                    <input type="checkbox" id="restaurant" value="1">
-                    <label for="restaurant">Restaurant</label>
-                </div>
-                <!--                <div class="form-group">-->
-                <!--                    <select class="mul-select" multiple="true">-->
-                <!--                        <option value="Cambodia">Cambodia</option>-->
-                <!--                        <option value="Khmer">Khmer</option>-->
-                <!--                        <option value="Thiland">Thiland</option>-->
-                <!--                        <option value="Koren">Koren</option>-->
-                <!--                        <option value="China">China</option>-->
-                <!--                        <option value="English">English</option>-->
-                <!--                        <option value="USA">USA</option>-->
-                <!--                    </select>-->
-                <!--                </div>-->
-            </div>
-            <div class="row">
-                <div class="col-md-4">
-                    <input type="checkbox" id="club" value="2">
-                    <label for="club">Club</label>
-                </div>
-                <div class="col-md-8">
-                    <input type="checkbox" id="hospital" value="3">
-                    <label for="hospital">Hospital</label>
+                <div class="form-group">
+                    <select class="mul-select" multiple="multiple" id="multiSelect">
+                        <option value="0">Hotel</option>
+                        <option value="1">Restaurant</option>
+                        <option value="2">Club</option>
+                        <option value="3">Shopping Complex</option>
+                        <option value="4">Temple</option>
+                        <option value="5">Hospital</option>
+                        <option value="6">School</option>
+                    </select>
                 </div>
             </div>
             <hr>
@@ -94,34 +83,24 @@
 
 </div>
 
-<div id="filterPopUp">
+<div id="filterPopUp" class="filter-pop-up">
     <form id="formFilter">
         <div class="container">
             <h4>Filter Location</h4>
             <h6>Tags</h6>
-            <div class="row">
-                <div class="col-md-4">
-                    <input type="checkbox" id="hotel" value="0" name="filter-input">
-                    <label for="hotel">Hotel</label>
-                </div>
-                <div class="col-md-8">
-                    <input type="checkbox" id="restaurant" value="1" name="filter-input">
-                    <label for="restaurant">Restaurant</label>
-                </div>
-            </div>
             <hr>
             <div class="row">
-                <div class="col-md-4">
-                    <input type="checkbox" id="club" value="2" name="filter-input">
-                    <label for="club">Club</label>
-                </div>
-                <div class="col-md-8">
-                    <input type="checkbox" id="hospital" value="3" name="filter-input">
-                    <label for="hospital">Hospital</label>
-                </div>
+                <select class="mul-select" multiple="multiple" id="multiSelectFilter" >
+                    <option value="0">Hotel</option>
+                    <option value="1">Restaurant</option>
+                    <option value="2">Club</option>
+                    <option value="3">Shopping Complex</option>
+                    <option value="4">Temple</option>
+                    <option value="5">Hospital</option>
+                    <option value="6">School</option>
+                </select>
             </div>
-            <hr>
-            <div class="row" style="position: absolute;bottom: 5px;width: 90%">
+            <div class="row pt-5">
                 <div class="col-md-4 ">
                 </div>
                 <div class="col-md-8 d-flex justify-content-around">
@@ -132,22 +111,13 @@
     </form>
 </div>
 
-<div id="map" style="position: relative"></div>
-
+<div id="map" style="position: relative;width: 100%"></div>
 
 <!-- Async script executes immediately and must be after any DOM elements used in callback. -->
 <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA8nueSoOhRCDTTw4Wjxt1CyRd3JavCSUQ&callback=initMap&libraries=&v=weekly"
         async></script>
-</body>
 
-<script>
-    $(document).ready(function () {
-        $(".mul-select").select2({
-            placeholder: "select country", //placeholder
-            tags: true,
-            tokenSeparators: ['/', ',', ';', " "]
-        });
-    })
-</script>
+
+</body>
 
 </html>

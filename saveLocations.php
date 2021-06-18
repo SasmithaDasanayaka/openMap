@@ -1,6 +1,6 @@
 <?php
 
-require "config.php";
+require('db_connecter.php');
 
 if (!empty($_POST["dataObj"])) {
     $dataObj = $_POST["dataObj"];
@@ -9,21 +9,18 @@ if (!empty($_POST["dataObj"])) {
     $des = $_POST["dataObj"]["des"];
     $tags = $_POST["dataObj"]["tags"];
 
-    // Create connection
-    $conn = new mysqli($servername, $username, $password, $dbname);
 
-    // Check connection
-    if ($conn->connect_error) {
-        die("Connection failed: " . $conn->connect_error);
-    }
+    $insertSQL = "INSERT INTO location(id,latitude,longitude,description,flag,createdAt) VALUES ('',?,?,?,0,NOW())";
 
-    $insertSQL = "INSERT INTO location(latitude,longitude,description,flag) values ($lat,$lng ,'$des',0)";
-    $conn->query($insertSQL) or die("error in inserting data to location table: " . $insertSQL);
-    $last_id = $conn->insert_id;
+    $stmt = mysqli_stmt_init($conn);
+    mysqli_stmt_prepare($stmt, $insertSQL);
+    mysqli_stmt_bind_param($stmt, 'dds', $lat, $lng, $des);
+    mysqli_stmt_execute($stmt);
+    $last_id = mysqli_insert_id($conn);
 
     foreach ($tags as $tag) {
         $insetTagSQL = "INSERT INTO location_tag(location_id,tag_id) VALUES ( $last_id,$tag)";
-        $conn->query($insetTagSQL) or die("error in inserting data to location_tag table: " . $insetTagSQL);
+        $conn->query($insetTagSQL) or die("error in inserting data to location_tag table: " . $row);
     }
     // close db connection
     $conn->close();

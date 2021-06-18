@@ -1,7 +1,6 @@
 let map;
 let marker;
 let allSavedLocations;
-const tagsDescribeArray = ["Hotel", "Restaurant", "Club", "Hospital"];
 let allSavedMarkers = [];
 let allSavedUniqueLoc = [];
 
@@ -12,34 +11,53 @@ function initMap() {
             lng: 150.644
         },
         zoom: 8,
+        fullscreenControl: false
     });
-
-
-
     map.addListener('click', (event) => {
         placeMarker(event.latLng);
     });
 
 
+    const loginControl = document.createElement("div");
+    LoginControl(loginControl, map);
+    map.controls[google.maps.ControlPosition.RIGHT_TOP].push(loginControl);
+    loginControl.addEventListener('click', (e) => {
+        console.log('working')
+    });
+
     // Create the DIV to hold the control and call the CenterControl()
     // constructor passing in this DIV.
-    const centerControlDiv = document.createElement("div");
-    CenterControl(centerControlDiv, map);
-    map.controls[google.maps.ControlPosition.RIGHT_TOP].push(centerControlDiv);
-    centerControlDiv.addEventListener('click', (e) => {
-        document.getElementById('popUp').style.visibility = 'visible'
+    const saveControlDiv = document.createElement("div");
+    CenterControl(saveControlDiv, map);
+    map.controls[google.maps.ControlPosition.RIGHT_TOP].push(saveControlDiv);
+    saveControlDiv.addEventListener('click', (e) => {
+        document.getElementById('popUp').classList.remove('pop-up');
+        document.getElementById('popUp').classList.add('grow-pop-up');
+        $(".mul-select").select2({
+            placeholder: "select tags", //placeholder
+            tags: true,
+            tokenSeparators: ['/', ',', ';', " "],
+            allowClear: true
+        });
     });
 
     const filterControlDiv = document.createElement("div");
     FilterControl(filterControlDiv, map);
     map.controls[google.maps.ControlPosition.RIGHT_TOP].push(filterControlDiv);
     filterControlDiv.addEventListener('click', (e) => {
-        document.getElementById('filterPopUp').style.visibility = 'visible'
+        document.getElementById('filterPopUp').classList.remove('filter-pop-up');
+        document.getElementById('filterPopUp').classList.add('grow-filter-pop-up');
+        $(".mul-select").select2({
+            placeholder: "select tags", //placeholder
+            tags: true,
+            tokenSeparators: ['/', ',', ';', " "],
+            allowClear: true
+        });
     });
+
+    //load saved locations
     loadALlSavedLocations();
     filter();
-
-
 }
 
 function placeMarker(location) {
@@ -75,39 +93,26 @@ function setAllMarkers(markerLocationsArray) {
     })
 }
 
-function filter(){
+function filter() {
     map.addListener('click', (event) => {
-        document.getElementById('filterPopUp').style.visibility = 'hidden';
-        document.getElementById("formFilter").reset();
+        document.getElementById('filterPopUp').classList.remove('grow-filter-pop-up');
+        document.getElementById('filterPopUp').classList.add('filter-pop-up');
+        $("#multiSelectFilter").val(null).trigger("change");
         setAllMarkers(allSavedUniqueLoc);
     });
-    // Select all checkboxes with the name 'settings' using querySelectorAll.
-    var checkboxes = document.querySelectorAll("input[type=checkbox][name=filter-input]");
-    let enabledCheckBoxes = []
-
-    // Use Array.forEach to add an event listener to each checkbox.
-    checkboxes.forEach((checkbox) => {
-        checkbox.addEventListener('change', function () {
-            enabledCheckBoxes =
-                Array.from(checkboxes) // Convert checkboxes to an array to use filter and map.
-                    .filter(i => i.checked) // Use Array.filter to remove unchecked checkboxes.
-                    .map(i => i.value) // Use Array.map to extract only the checkbox values from the array of objects.
-
-            console.log("marker before", marker)
+    $('#multiSelectFilter').on('change', function (e) {
+        var strTagsArray = $('#multiSelectFilter').val() && $('#multiSelectFilter').val();
+        if (strTagsArray && strTagsArray.length != 0) {
+            var tagsArray = strTagsArray.map(ele => parseInt(ele));
             marker && marker.setMap(null)
-            console.log("marker after", marker)
-            if (enabledCheckBoxes.length != 0) {
-                allSavedMarkers.forEach(marker => {
-                    marker.setMap(null)
-                })
-            } else {
-                setAllMarkers(allSavedUniqueLoc)
-            }
 
+            //remove all markers
+            allSavedMarkers.forEach(marker => {
+                marker.setMap(null)
+            })
 
-            enabledCheckBoxes.forEach(ele => {
-                const checkedBoxValue = parseInt(ele)
-                let filteredLoc = allSavedLocations.filter(ele => parseInt(ele.tag_id) === checkedBoxValue)
+            tagsArray.forEach(tag => {
+                let filteredLoc = allSavedLocations.filter(ele => parseInt(ele.tag_id) === tag)
                 let markerLocations = [];
                 markerLocations.push(filteredLoc[0]);
                 filteredLoc.forEach(ele => {
@@ -122,26 +127,23 @@ function filter(){
                 })
                 setAllMarkers(markerLocations);
             })
-        })
+
+        } else {
+            setAllMarkers(allSavedUniqueLoc)
+        }
     });
 }
 
 function saveData() {
     const description = document.getElementById('description').value;
-    let tagsArray = [];
-    var checkboxes = document.getElementsByTagName("input");
-    var isChecked = false;
-    for (var i = 0; i < checkboxes.length; i++) {
-        if (checkboxes[i].type == "checkbox") {
-            if (checkboxes[i].checked) {
-                isChecked = true;
-                tagsArray.push(parseInt(checkboxes[i].value))
-
-            }
-        }
+    let tagsArray = $('#multiSelect').val();
+    let isTagSet = false;
+    if (tagsArray && tagsArray.length != 0) {
+        tagsArray = tagsArray.map(ele => parseInt(ele))
+        isTagSet = true;
     }
     if (marker) {
-        if (isChecked) {
+        if (isTagSet) {
             if (description != '') {
                 const position = marker.getPosition().toJSON()
                 const tags = tagsArray
@@ -153,23 +155,59 @@ function saveData() {
                 $.post("saveLocations.php", {
                     dataObj
                 }, (data, status) => {
+                    console.log("return: ", data)
                     if (status === "success") {
-                        document.getElementById('popUp').style.visibility = 'hidden';
-                        alert("Successfully added location!");
+                        document.getElementById('popUp').classList.remove('grow-pop-up');
+                        document.getElementById('popUp').classList.add('pop-up');
                         document.getElementById("form").reset();
+                        $("#multiSelect").val(null).trigger("change");
+                        setTimeout(() => {
+                            $("#multiSelect").empty().trigger('change');
+                            $('#toast-warning strong').html("Succes");
+                            $('#toast-warning p').html("Succesfully Saved the location");
+                            $('#toast-warning').removeClass('alert-danger');
+                            $('#toast-warning').addClass('alert-success');
+                            $('#toast-header-warning').css({'background-color': '#b6e86d'});
+                            $('#toast-warning').css({'left': '20px', 'transition-duration': '0.5s'});
+                        }, 700)
+
+
+                        setTimeout(() => {
+                            $('#toast-warning').css({'left': '-400px', 'transition-duration': '0.5s'});
+                            $('#toast-warning').removeClass('alert-success');
+                            $('#toast-warning').addClass('alert-danger');
+                            $('#toast-header-warning').css({'background-color': '#eb9994'});
+                            $('#toast-warning strong').html("Warning");
+                        }, 3700)
                     } else {
-                        alert("Error occured in saving location! Please try again ");
+                        $('#toast-warning p').html("Error occurred in saving location!");
+                        $('#toast-warning').css({'left': '20px', 'transition-duration': '0.5s'});
+                        setTimeout(() => {
+                            $('#toast-warning').css({'left': '-400px', 'transition-duration': '0.5s'});
+                        }, 3000)
                     }
 
                 })
             } else {
-                alert("Please fill the description");
+                $('#toast-warning p').html("Please enter a description");
+                $('#toast-warning').css({'left': '20px', 'transition-duration': '0.5s'});
+                setTimeout(() => {
+                    $('#toast-warning').css({'left': '-400px', 'transition-duration': '0.5s'});
+                }, 3000)
             }
         } else {
-            alert("Please select a tag");
+            $('#toast-warning p').html("Please select a tag");
+            $('#toast-warning').css({'left': '20px', 'transition-duration': '0.5s'});
+            setTimeout(() => {
+                $('#toast-warning').css({'left': '-400px', 'transition-duration': '0.5s'});
+            }, 3000)
         }
     } else {
-        alert("Please select a location in the map");
+        $('#toast-warning p').html("Please select a location in the map");
+        $('#toast-warning').css({'left': '20px', 'transition-duration': '0.5s'});
+        setTimeout(() => {
+            $('#toast-warning').css({'left': '-400px', 'transition-duration': '0.5s'});
+        }, 3000)
     }
 }
 
@@ -205,13 +243,16 @@ function loadALlSavedLocations() {
 }
 
 function cancelSave() {
-    document.getElementById('popUp').style.visibility = 'hidden';
+    document.getElementById('popUp').classList.remove('grow-pop-up');
+    document.getElementById('popUp').classList.add('pop-up');
+    $("#multiSelect").val(null).trigger("change");
     document.getElementById("form").reset();
 }
 
 function cancelFilter() {
-    document.getElementById('filterPopUp').style.visibility = 'hidden';
-    document.getElementById("formFilter").reset();
+    document.getElementById('filterPopUp').classList.remove('grow-filter-pop-up');
+    document.getElementById('filterPopUp').classList.add('filter-pop-up');
+    $("#multiSelectFilter").val(null).trigger("change");
     setAllMarkers(allSavedUniqueLoc);
 }
 
@@ -225,7 +266,7 @@ function CenterControl(controlDiv, map) {
     controlUI.style.borderRadius = "3px";
     controlUI.style.boxShadow = "0 2px 6px rgba(0,0,0,.3)";
     controlUI.style.cursor = "pointer";
-    controlUI.style.marginTop = "8px";
+    controlUI.style.marginTop = "20px";
     controlUI.style.marginBottom = "22px";
     controlUI.style.textAlign = "center";
     controlUI.title = "Click to save the location";
@@ -266,5 +307,26 @@ function FilterControl(controlDiv, map) {
     controlText.style.paddingRight = "5px";
     controlText.innerHTML = "Filter Location";
     controlUI.appendChild(controlText);
+}
+
+function LoginControl(controlDiv, map) {
+    // Set CSS for the control border.
+    const btnUI = document.createElement("button");
+    btnUI.classList.add('fa');
+    btnUI.classList.add('fa-home');
+    controlDiv.appendChild(btnUI);
+    // Set CSS for the control interior.
+    const icon = document.createElement("i");
+    // controlText.style.color = "#fff";
+    // controlText.style.fontFamily = "Roboto,Arial,sans-serif";
+    // controlText.style.fontSize = "16px";
+    // controlText.style.lineHeight = "38px";
+    // controlText.style.paddingLeft = "5px";
+    // controlText.style.paddingRight = "5px";
+    // controlText.innerHTML = "Filter Location";
+    icon.classList.add('fa-solid');
+    icon.classList.add('fa-right-to-bracket');
+
+    btnUI.appendChild(icon);
 
 }
