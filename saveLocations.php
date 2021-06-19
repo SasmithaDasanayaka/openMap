@@ -1,6 +1,6 @@
 <?php
 
-require('db_connecter.php');
+require('dbConnecter.php');
 
 if (!empty($_POST["dataObj"])) {
     $dataObj = $_POST["dataObj"];

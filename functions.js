@@ -22,7 +22,7 @@ function initMap() {
     LoginControl(loginControl, map);
     map.controls[google.maps.ControlPosition.RIGHT_TOP].push(loginControl);
     loginControl.addEventListener('click', (e) => {
-        console.log('working')
+        $('#sign-in-popup').css({'opacity': '1', 'transition-duration': '0.5s'});
     });
 
     // Create the DIV to hold the control and call the CenterControl()
@@ -113,19 +113,21 @@ function filter() {
 
             tagsArray.forEach(tag => {
                 let filteredLoc = allSavedLocations.filter(ele => parseInt(ele.tag_id) === tag)
-                let markerLocations = [];
-                markerLocations.push(filteredLoc[0]);
-                filteredLoc.forEach(ele => {
-                    let tem = markerLocations;
-                    let ispresent = false;
-                    tem.forEach(e => {
-                        if (e.id === ele.id) {
-                            ispresent = true;
-                        }
+                if (filteredLoc && filteredLoc.length != 0) {
+                    let markerLocations = [];
+                    markerLocations.push(filteredLoc[0]);
+                    filteredLoc.forEach(ele => {
+                        let tem = markerLocations;
+                        let ispresent = false;
+                        tem.forEach(e => {
+                            if (e.id === ele.id) {
+                                ispresent = true;
+                            }
+                        })
+                        !ispresent && markerLocations.push(ele);
                     })
-                    !ispresent && markerLocations.push(ele);
-                })
-                setAllMarkers(markerLocations);
+                    setAllMarkers(markerLocations);
+                }
             })
 
         } else {
@@ -256,77 +258,104 @@ function cancelFilter() {
     setAllMarkers(allSavedUniqueLoc);
 }
 
+function cancelSignIn() {
+    $('#sign-in-popup').css({'opacity': '0', 'transition-duration': '0.5s'});
+    setTimeout(() => {
+        $('#sign-in-popup input').val(null);
+    }, 2000)
+}
+
 initMap()
 
 function CenterControl(controlDiv, map) {
-    // Set CSS for the control border.
-    const controlUI = document.createElement("div");
-    controlUI.style.backgroundColor = "rgb(61, 176, 12)";
-    controlUI.style.border = "2px solid #fff";
-    controlUI.style.borderRadius = "3px";
-    controlUI.style.boxShadow = "0 2px 6px rgba(0,0,0,.3)";
-    controlUI.style.cursor = "pointer";
-    controlUI.style.marginTop = "20px";
-    controlUI.style.marginBottom = "22px";
-    controlUI.style.textAlign = "center";
-    controlUI.title = "Click to save the location";
-    controlDiv.appendChild(controlUI);
-    // Set CSS for the control interior.
-    const controlText = document.createElement("div");
-    controlText.style.color = "#fff";
-    controlText.style.fontFamily = "Roboto,Arial,sans-serif";
-    controlText.style.fontSize = "16px";
-    controlText.style.lineHeight = "38px";
-    controlText.style.paddingLeft = "5px";
-    controlText.style.paddingRight = "5px";
-    controlText.innerHTML = "Save Location";
-    controlUI.appendChild(controlText);
+    const icon = document.createElement("i");
+    icon.style.cursor = "pointer";
+    icon.style.width = '40px';
+    icon.style.height = '40px';
+    icon.style.marginTop = "0px";
+    icon.style.marginRight = "10px";
+    icon.style.padding = '4px 2px 2px 8px';
+    icon.classList.add('fa');
+    icon.classList.add('fa-plus-square-o');
+    icon.style.fontSize = '30px';
+    icon.title = "Save location";
+    icon.style.color = 'rgb(133, 133, 133)';
+    icon.style.backgroundColor = 'white';
+    icon.style.borderBottom = '1px solid #d3d8e0';
+    controlDiv.appendChild(icon);
 
 }
 
 function FilterControl(controlDiv, map) {
-    // Set CSS for the control border.
-    const controlUI = document.createElement("div");
-    controlUI.style.backgroundColor = "#4445c7";
-    controlUI.style.border = "2px solid #fff";
-    controlUI.style.borderRadius = "3px";
-    controlUI.style.boxShadow = "0 2px 6px rgba(0,0,0,.3)";
-    controlUI.style.cursor = "pointer";
-    controlUI.style.marginTop = "8px";
-    controlUI.style.marginBottom = "22px";
-    controlUI.style.textAlign = "center";
-    controlUI.title = "Click to filter locations";
-    controlDiv.appendChild(controlUI);
-    // Set CSS for the control interior.
-    const controlText = document.createElement("div");
-    controlText.style.color = "#fff";
-    controlText.style.fontFamily = "Roboto,Arial,sans-serif";
-    controlText.style.fontSize = "16px";
-    controlText.style.lineHeight = "38px";
-    controlText.style.paddingLeft = "5px";
-    controlText.style.paddingRight = "5px";
-    controlText.innerHTML = "Filter Location";
-    controlUI.appendChild(controlText);
+    const icon = document.createElement("i");
+    icon.style.cursor = "pointer";
+    icon.style.width = '40px';
+    icon.style.height = '40px';
+    icon.style.marginTop = "0px";
+    icon.style.marginRight = "10px";
+    icon.style.padding = '4px 2px 2px 8px';
+    icon.classList.add('fa');
+    icon.classList.add('fa-filter');
+    icon.style.fontSize = '30px';
+    icon.title = "Filter locations";
+    icon.style.color = 'rgb(133, 133, 133)';
+    icon.style.backgroundColor = 'white';
+    icon.style.borderBottomLeftRadius = '2px';
+    icon.style.borderBottomRightRadius = '2px';
+
+    controlDiv.appendChild(icon);
 }
 
 function LoginControl(controlDiv, map) {
     // Set CSS for the control border.
-    const btnUI = document.createElement("button");
-    btnUI.classList.add('fa');
-    btnUI.classList.add('fa-home');
-    controlDiv.appendChild(btnUI);
-    // Set CSS for the control interior.
     const icon = document.createElement("i");
-    // controlText.style.color = "#fff";
-    // controlText.style.fontFamily = "Roboto,Arial,sans-serif";
-    // controlText.style.fontSize = "16px";
-    // controlText.style.lineHeight = "38px";
-    // controlText.style.paddingLeft = "5px";
-    // controlText.style.paddingRight = "5px";
-    // controlText.innerHTML = "Filter Location";
-    icon.classList.add('fa-solid');
-    icon.classList.add('fa-right-to-bracket');
+    icon.style.cursor = "pointer";
+    icon.style.width = '40px';
+    icon.style.height = '40px';
+    icon.style.marginTop = "30px";
+    icon.style.marginRight = "10px";
+    icon.style.padding = '4px 2px 2px 8px';
+    icon.classList.add('fa');
+    icon.classList.add('fa-sign-in');
+    icon.style.fontSize = '28px';
+    icon.title = "Sign In";
+    icon.style.color = 'rgb(133, 133, 133)';
+    icon.style.borderBottom = '1px solid #d3d8e0';
+    icon.style.backgroundColor = 'white';
+    icon.style.borderTopLeftRadius = '2px';
+    icon.style.borderTopRightRadius = '2px';
+    controlDiv.appendChild(icon);
 
-    btnUI.appendChild(icon);
+}
 
+function signIn() {
+    const adminUsername = 'Admin';
+    const adminPw = 'Admin@123';
+
+    const username = $('#username').val();
+    const pw = $('#password').val();
+    if (username === '' || pw === '') {
+        triggerToast("Fill both username and password")
+    } else {
+        if (adminUsername === username) {
+            if (adminPw === pw) {
+                console.log('success')
+
+            } else {
+                triggerToast("Invalid password")
+
+            }
+        } else {
+            triggerToast("Invalid username")
+        }
+    }
+}
+
+
+function triggerToast(message) {
+    $('#toast-warning p').html(message);
+    $('#toast-warning').css({'left': '20px', 'transition-duration': '0.5s'});
+    setTimeout(() => {
+        $('#toast-warning').css({'left': '-400px', 'transition-duration': '0.5s'});
+    }, 3000)
 }

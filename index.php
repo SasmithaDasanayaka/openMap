@@ -25,6 +25,8 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
 
     <script type="text/javascript" src="functions.js"></script>
+    <script type="text/javascript" src="signInFunctions.js.js"></script>
+
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
@@ -39,6 +41,34 @@
     </div>
     <div class="toast-body">
         <p><strong></strong></p>
+    </div>
+</div>
+
+<div id="sign-in-popup" class="sign-in">
+    <div class="card" style="width: 25rem;">
+        <div class="card-body">
+            <h5 class="card-title">Sign In</h5>
+            <hr>
+            <p class="card-text">* Only admins can sign in.</p>
+            <div class="row px-3">
+                <input id="username" type="text" class="form-control" placeholder="Username"
+                       style="width: 100%">
+            </div>
+
+            <div class="row  mt-2 px-3">
+                <input id="password" type="password" class="form-control" placeholder="Password"
+                       style="width: 100%">
+            </div>
+
+            <div class="row mt-2">
+                <div class="col-md-6">
+                </div>
+                <div class="col-md-6">
+                    <button class="btn btn-primary" onclick="signIn()">Sign In</button>
+                    <button class="btn btn-danger" onclick="cancelSignIn()"> Cancel</button>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 
@@ -90,7 +120,7 @@
             <h6>Tags</h6>
             <hr>
             <div class="row">
-                <select class="mul-select" multiple="multiple" id="multiSelectFilter" >
+                <select class="mul-select" multiple="multiple" id="multiSelectFilter">
                     <option value="0">Hotel</option>
                     <option value="1">Restaurant</option>
                     <option value="2">Club</option>
