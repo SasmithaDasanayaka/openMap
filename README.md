@@ -1,1 +1,1 @@
-7_google_map
+openMap
