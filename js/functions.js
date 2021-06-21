@@ -17,14 +17,6 @@ function initMap() {
         placeMarker(event.latLng);
     });
 
-
-    const loginControl = document.createElement("div");
-    LoginControl(loginControl, map);
-    map.controls[google.maps.ControlPosition.RIGHT_TOP].push(loginControl);
-    loginControl.addEventListener('click', (e) => {
-        $('#sign-in-popup').css({'opacity': '1', 'transition-duration': '0.5s'});
-    });
-
     // Create the DIV to hold the control and call the CenterControl()
     // constructor passing in this DIV.
     const saveControlDiv = document.createElement("div");
@@ -45,6 +37,7 @@ function initMap() {
     FilterControl(filterControlDiv, map);
     map.controls[google.maps.ControlPosition.RIGHT_TOP].push(filterControlDiv);
     filterControlDiv.addEventListener('click', (e) => {
+        marker && marker.setMap(null)
         document.getElementById('filterPopUp').classList.remove('filter-pop-up');
         document.getElementById('filterPopUp').classList.add('grow-filter-pop-up');
         $(".mul-select").select2({
@@ -65,6 +58,7 @@ function placeMarker(location) {
         marker = new google.maps.Marker({
             position: location,
             map: map,
+            icon: 'http://chart.googleapis.com/chart?chst=d_map_pin_letter&chld=%7c5680FC%7c000000&.png'
         });
     } else {
         if (marker.map) {
@@ -74,7 +68,8 @@ function placeMarker(location) {
         } else {
             marker = new google.maps.Marker({
                 position: location,
-                map: map
+                map: map,
+                icon: 'http://chart.googleapis.com/chart?chst=d_map_pin_letter&chld=%7c5680FC%7c000000&.png'
             });
         }
     }
@@ -82,12 +77,27 @@ function placeMarker(location) {
 
 function setAllMarkers(markerLocationsArray) {
     markerLocationsArray.forEach(marker => {
-        const lat = parseFloat(marker.latitude)
-        const lng = parseFloat(marker.longitude)
+        const lat = parseFloat(marker.latitude);
+        const lng = parseFloat(marker.longitude);
+        const infoWindowString = `<div id="content">
+                                            <div id="siteNotice">
+                                                ${marker.description}
+                                            </div>
+                                           </div>`;
+        const infowindow = new google.maps.InfoWindow({
+            content: infoWindowString,
+        });
         let markers = new google.maps.Marker({
             position: {lat, lng},
             map: map,
             title: marker.description,
+        });
+        markers.addListener("click", () => {
+            infowindow.open({
+                anchor: markers,
+                map,
+                shouldFocus: false,
+            });
         });
         allSavedMarkers.push(markers)
     })
@@ -100,12 +110,12 @@ function filter() {
         $("#multiSelectFilter").val(null).trigger("change");
         setAllMarkers(allSavedUniqueLoc);
     });
+
     $('#multiSelectFilter').on('change', function (e) {
         var strTagsArray = $('#multiSelectFilter').val() && $('#multiSelectFilter').val();
         if (strTagsArray && strTagsArray.length != 0) {
             var tagsArray = strTagsArray.map(ele => parseInt(ele));
             marker && marker.setMap(null)
-
             //remove all markers
             allSavedMarkers.forEach(marker => {
                 marker.setMap(null)
@@ -154,33 +164,34 @@ function saveData() {
                     des: description,
                     tags
                 }
-                $.post("saveLocations.php", {
+                $.post("php/saveLocations.php", {
                     dataObj
                 }, (data, status) => {
-                    console.log("return: ", data)
                     if (status === "success") {
                         document.getElementById('popUp').classList.remove('grow-pop-up');
                         document.getElementById('popUp').classList.add('pop-up');
                         document.getElementById("form").reset();
                         $("#multiSelect").val(null).trigger("change");
                         setTimeout(() => {
-                            $("#multiSelect").empty().trigger('change');
                             $('#toast-warning strong').html("Succes");
                             $('#toast-warning p').html("Succesfully Saved the location");
                             $('#toast-warning').removeClass('alert-danger');
                             $('#toast-warning').addClass('alert-success');
                             $('#toast-header-warning').css({'background-color': '#b6e86d'});
                             $('#toast-warning').css({'left': '20px', 'transition-duration': '0.5s'});
-                        }, 700)
-
+                        }, 900)
 
                         setTimeout(() => {
                             $('#toast-warning').css({'left': '-400px', 'transition-duration': '0.5s'});
+                        }, 3900)
+
+
+                        setTimeout(() => {
                             $('#toast-warning').removeClass('alert-success');
                             $('#toast-warning').addClass('alert-danger');
                             $('#toast-header-warning').css({'background-color': '#eb9994'});
                             $('#toast-warning strong').html("Warning");
-                        }, 3700)
+                        }, 4400)
                     } else {
                         $('#toast-warning p').html("Error occurred in saving location!");
                         $('#toast-warning').css({'left': '20px', 'transition-duration': '0.5s'});
@@ -214,7 +225,7 @@ function saveData() {
 }
 
 function loadALlSavedLocations() {
-    $.get("loadLocations.php", (data, status) => {
+    $.get("php/loadLocations.php", {flag: 1}, (data, status) => {
         const res = JSON.parse(data)
         allSavedLocations = res;
         let markerLocations = [];
@@ -230,16 +241,33 @@ function loadALlSavedLocations() {
             !ispresent && markerLocations.push(ele);
         })
         allSavedUniqueLoc = markerLocations;
-        markerLocations.forEach(marker => {
-            const lat = parseFloat(marker.latitude)
-            const lng = parseFloat(marker.longitude)
-            let markers = new google.maps.Marker({
-                position: {lat, lng},
-                map: map,
-                title: marker.description,
-            });
-            allSavedMarkers.push(markers)
-        })
+        setTimeout(() => {
+            markerLocations.forEach(marker => {
+                const lat = parseFloat(marker.latitude)
+                const lng = parseFloat(marker.longitude)
+                const infoWindowString = `<div id="content">
+                                            <div id="siteNotice">
+                                                ${marker.description}
+                                            </div>
+                                           </div>`;
+                const infowindow = new google.maps.InfoWindow({
+                    content: infoWindowString,
+                });
+                let markers = new google.maps.Marker({
+                    position: {lat, lng},
+                    map: map,
+                    title: marker.description,
+                });
+                markers.addListener("click", () => {
+                    infowindow.open({
+                        anchor: markers,
+                        map,
+                        shouldFocus: false,
+                    });
+                });
+                allSavedMarkers.push(markers)
+            })
+        }, 2000)
     })
 
 }
@@ -252,6 +280,7 @@ function cancelSave() {
 }
 
 function cancelFilter() {
+    marker && marker.setMap(map)
     document.getElementById('filterPopUp').classList.remove('grow-filter-pop-up');
     document.getElementById('filterPopUp').classList.add('filter-pop-up');
     $("#multiSelectFilter").val(null).trigger("change");
@@ -259,7 +288,7 @@ function cancelFilter() {
 }
 
 function cancelSignIn() {
-    $('#sign-in-popup').css({'opacity': '0', 'transition-duration': '0.5s'});
+    $('#sign-in-popup').css({'visibility': 'hidden'});
     setTimeout(() => {
         $('#sign-in-popup input').val(null);
     }, 2000)
@@ -272,7 +301,7 @@ function CenterControl(controlDiv, map) {
     icon.style.cursor = "pointer";
     icon.style.width = '40px';
     icon.style.height = '40px';
-    icon.style.marginTop = "0px";
+    icon.style.marginTop = "20px";
     icon.style.marginRight = "10px";
     icon.style.padding = '4px 2px 2px 8px';
     icon.classList.add('fa');
@@ -282,6 +311,8 @@ function CenterControl(controlDiv, map) {
     icon.style.color = 'rgb(133, 133, 133)';
     icon.style.backgroundColor = 'white';
     icon.style.borderBottom = '1px solid #d3d8e0';
+    icon.style.borderTopLeftRadius = '2px';
+    icon.style.borderTopRightRadius = '2px';
     controlDiv.appendChild(icon);
 
 }
@@ -306,56 +337,3 @@ function FilterControl(controlDiv, map) {
     controlDiv.appendChild(icon);
 }
 
-function LoginControl(controlDiv, map) {
-    // Set CSS for the control border.
-    const icon = document.createElement("i");
-    icon.style.cursor = "pointer";
-    icon.style.width = '40px';
-    icon.style.height = '40px';
-    icon.style.marginTop = "30px";
-    icon.style.marginRight = "10px";
-    icon.style.padding = '4px 2px 2px 8px';
-    icon.classList.add('fa');
-    icon.classList.add('fa-sign-in');
-    icon.style.fontSize = '28px';
-    icon.title = "Sign In";
-    icon.style.color = 'rgb(133, 133, 133)';
-    icon.style.borderBottom = '1px solid #d3d8e0';
-    icon.style.backgroundColor = 'white';
-    icon.style.borderTopLeftRadius = '2px';
-    icon.style.borderTopRightRadius = '2px';
-    controlDiv.appendChild(icon);
-
-}
-
-function signIn() {
-    const adminUsername = 'Admin';
-    const adminPw = 'Admin@123';
-
-    const username = $('#username').val();
-    const pw = $('#password').val();
-    if (username === '' || pw === '') {
-        triggerToast("Fill both username and password")
-    } else {
-        if (adminUsername === username) {
-            if (adminPw === pw) {
-                console.log('success')
-
-            } else {
-                triggerToast("Invalid password")
-
-            }
-        } else {
-            triggerToast("Invalid username")
-        }
-    }
-}
-
-
-function triggerToast(message) {
-    $('#toast-warning p').html(message);
-    $('#toast-warning').css({'left': '20px', 'transition-duration': '0.5s'});
-    setTimeout(() => {
-        $('#toast-warning').css({'left': '-400px', 'transition-duration': '0.5s'});
-    }, 3000)
-}

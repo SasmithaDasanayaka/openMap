@@ -13,7 +13,7 @@ try {
     $conn = new mysqli(SERVER_NAME, USERNAME, PASSWORD, DB_NAME);
     mysqli_set_charset($conn, 'utf8');
 } catch (Exception $ex) {
-    echo $ex->getMessage();
+    echo json_encode($ex->getMessage());
 } catch (Error $er) {
-    echo $er->getMessage();
+    echo json_encode($er->getMessage());
 }

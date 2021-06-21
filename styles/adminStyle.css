@@ -1,0 +1,54 @@
+#map {
+    margin-left: 53%;
+    margin-top: 2%;
+    margin-bottom: 2%;
+    height: 80%;
+    width: 45%;
+    border: 5px solid black;
+}
+
+html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+}
+
+.log-out:link, .log-out:visited {
+    color: white;
+    border: 2px solid red;
+    border-radius: 5px;
+    padding: 7px 10px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+}
+
+.log-out:hover, .log-out:active {
+    background-color: red;
+    color: white;
+}
+
+i {
+    color: rgb(133, 133, 133);
+    padding-left: 10px;
+}
+
+.fa:hover {
+    color: black !important;
+    cursor: pointer;
+    transform: scale(1.5);
+}
+
+#toast-warning {
+    position: absolute;
+    left: -400px;
+    top: 20px;
+    z-index: 1;
+    width: 400px;
+    height: 100px;
+}
+
+#toast-header-warning {
+    height: 30px;
+    background-color: #eb9994;
+}

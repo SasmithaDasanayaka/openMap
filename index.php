@@ -3,12 +3,12 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>Simple Map</title>
+    <title>xplomate</title>
     <script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
     <!-- CSS only -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet"
           integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x" crossorigin="anonymous">
-    <link rel="stylesheet" type="text/css" href="style.css"/>
+    <link rel="stylesheet" type="text/css" href="styles/style.css"/>
     <!--    <script src="./index.js"></script>-->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet"
@@ -24,8 +24,8 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
 
-    <script type="text/javascript" src="functions.js"></script>
-    <script type="text/javascript" src="signInFunctions.js.js"></script>
+    <script type="text/javascript" src="js/functions.js"></script>
+    <script type="text/javascript" src="js/signInFunctions.js"></script>
 
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
@@ -44,33 +44,6 @@
     </div>
 </div>
 
-<div id="sign-in-popup" class="sign-in">
-    <div class="card" style="width: 25rem;">
-        <div class="card-body">
-            <h5 class="card-title">Sign In</h5>
-            <hr>
-            <p class="card-text">* Only admins can sign in.</p>
-            <div class="row px-3">
-                <input id="username" type="text" class="form-control" placeholder="Username"
-                       style="width: 100%">
-            </div>
-
-            <div class="row  mt-2 px-3">
-                <input id="password" type="password" class="form-control" placeholder="Password"
-                       style="width: 100%">
-            </div>
-
-            <div class="row mt-2">
-                <div class="col-md-6">
-                </div>
-                <div class="col-md-6">
-                    <button class="btn btn-primary" onclick="signIn()">Sign In</button>
-                    <button class="btn btn-danger" onclick="cancelSignIn()"> Cancel</button>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
 
 <div id="popUp" class="pop-up">
     <form id="form">
@@ -78,35 +51,28 @@
             <h4>Save Location</h4>
             <hr>
             <h6>Tags</h6>
-            <div class="row">
-                <div class="form-group">
-                    <select class="mul-select" multiple="multiple" id="multiSelect">
-                        <option value="0">Hotel</option>
-                        <option value="1">Restaurant</option>
-                        <option value="2">Club</option>
-                        <option value="3">Shopping Complex</option>
-                        <option value="4">Temple</option>
-                        <option value="5">Hospital</option>
-                        <option value="6">School</option>
-                    </select>
-                </div>
+            <div class="form-group">
+                <select class="mul-select form-control" multiple="multiple" id="multiSelect" required>
+                    <option value="0">Hotel</option>
+                    <option value="1">Restaurant</option>
+                    <option value="2">Club</option>
+                    <option value="3">Shopping Complex</option>
+                    <option value="4">Temple</option>
+                    <option value="5">Hospital</option>
+                    <option value="6">School</option>
+                </select>
             </div>
             <hr>
-            <div class="row">
-                <div class="col-md-4">
-                    <h6>Description</h6>
-                </div>
-                <div class="col-md-8">
-                    <textarea id='description' placeholder='Description'></textarea>
-                </div>
+            <div class="form-group">
+                <h6>Description</h6>
+                <textarea class=" form-control mx-2" id='description' placeholder='Description' required
+                          style="width: 100%"></textarea>
             </div>
-            <div class="row" style="position: absolute;bottom: 5px;width: 90%">
-                <div class="col-md-4 ">
-                </div>
-                <div class="col-md-8 d-flex justify-content-around">
-                    <button type="button" class="btn btn-primary" onclick="saveData()">Save</button>
-                    <button type="button" class="btn btn-danger" onclick="cancelSave()">Cancel</button>
-                </div>
+
+
+            <div style="padding-left: 30%">
+                <button type="button" class="btn btn-primary " onclick="saveData()">Save</button>
+                <button type="button" class="btn btn-danger " onclick="cancelSave()">Cancel</button>
             </div>
         </div>
     </form>
