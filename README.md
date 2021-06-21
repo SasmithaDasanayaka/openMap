@@ -1,1 +1,2 @@
-openMap
+The system is a web application based on google maps javascript api. There are two users namely normal user and admin user. Normal user can select a location on the map and can suggest that location by accounting a suitable set of tags related to the place and a description. Admin has a admin panel and he can view all the suggested places by the normal user in a separate map view. Upon admins approval the suggested places can be made accepted or rejected. Only the admin accepted places are visible in the web application.
+Tech stack : html, css, php, javascript, jquery, google map js api
