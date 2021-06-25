@@ -22,6 +22,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet"
           integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x" crossorigin="anonymous">
     <link rel="stylesheet" type="text/css" href="styles/style.css"/>
+    <link rel="stylesheet" type="text/css" href="styles/adminStyle.css"/>
+
     <!--    <script src="./index.js"></script>-->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet"
@@ -45,6 +47,25 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 </head>
 
 <body>
+<?php
+if (isset($loginError) && !empty($loginError)) {
+    echo "<div class='alert alert-danger' style='position: absolute;
+    left: 20px;
+    top: 20px;
+    z-index: 1;
+    width: 400px;
+    height: 100px;'>
+    <div class='toast-header d-inline-block' style=' height: 30px;
+    background-color: #eb9994;'>
+        <strong class='mr-auto text-primary d-block'>Warning</strong>
+    </div>
+    <div class='toast-body'>
+        <p><strong>Enter valid username and password</strong></p>
+    </div>
+</div>";
+}
+?>
+
 <div id="sign-in-popup" class="sign-in">
     <div class="card" style="width: 25rem;">
         <div class="card-body">

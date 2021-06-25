@@ -1,7 +1,6 @@
 <?php
 require('config.php');
 
-$error =array();
 if (!empty($_POST['username'] && !empty($_POST['password']))) {
     $username = $_POST['username'];
     $password = $_POST['password'];
@@ -11,6 +10,5 @@ if (!empty($_POST['username'] && !empty($_POST['password']))) {
         header('location:php/admin.php');
         exit();
     }
-    $error = 'Failed authenticate';
-    echo 'not validate';
+    $loginError = 'Failed authenticate';
 }

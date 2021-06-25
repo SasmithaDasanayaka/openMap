@@ -7,21 +7,22 @@ if (!empty($_POST["dataObj"])) {
     $lat = $dataObj["position"]["lat"];
     $lng = $dataObj["position"]["lng"];
     $des = $_POST["dataObj"]["des"];
-    $tags = $_POST["dataObj"]["tags"];
+    $age = $_POST["dataObj"]["age"];
+    $race = $_POST["dataObj"]["race"];
+    $gender = $_POST["dataObj"]["gender"];
+    $religion = $_POST["dataObj"]["religion"];
+    $disability = $_POST["dataObj"]["disability"];
+    $socioeconomy = $_POST["dataObj"]["socioeconomy"];
 
 
-    $insertSQL = "INSERT INTO location(id,latitude,longitude,description,flag,createdAt) VALUES ('',?,?,?,0,NOW())";
+    $insertSQL = "INSERT INTO location(id,latitude,longitude,description,flag,age,race,gender,religion,disability,socioeconomic,createdAt) VALUES ('',?,?,?,0,?,?,?,?,?,?,NOW())";
 
     $stmt = mysqli_stmt_init($conn);
     mysqli_stmt_prepare($stmt, $insertSQL);
-    mysqli_stmt_bind_param($stmt, 'dds', $lat, $lng, $des);
+    mysqli_stmt_bind_param($stmt, 'ddsdddddd', $lat, $lng, $des, $age, $race, $gender, $religion, $disability, $socioeconomy);
     mysqli_stmt_execute($stmt);
     $last_id = mysqli_insert_id($conn);
 
-    foreach ($tags as $tag) {
-        $insetTagSQL = "INSERT INTO location_tag(location_id,tag_id) VALUES ( $last_id,$tag)";
-        $conn->query($insetTagSQL) or die("error in inserting data to location_tag table: " . $row);
-    }
     // close db connection
     $conn->close();
     echo $last_id;

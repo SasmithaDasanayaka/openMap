@@ -50,31 +50,138 @@
         <div class="container">
             <h4>Save Location</h4>
             <hr>
-            <h6>Tags</h6>
-            <div class="form-group">
-                <select class="mul-select form-control" multiple="multiple" id="multiSelect" required>
-                    <option value="0">Hotel</option>
-                    <option value="1">Restaurant</option>
-                    <option value="2">Club</option>
-                    <option value="3">Shopping Complex</option>
-                    <option value="4">Temple</option>
-                    <option value="5">Hospital</option>
-                    <option value="6">School</option>
-                </select>
+            <h6>User Details</h6>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="selector-age">Age</label>
+                        <select class="form-select" aria-label="Default select example" id="selector-age">
+                            <option value="1">0-19</option>
+                            <option value="2">20-39</option>
+                            <option value="3">40-60</option>
+                            <option value="4">61+</option>
+                            <option value="0" selected>Prefer not to answer</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="selector-religion">Religion and Spirituality</label>
+                        <select class="form-select" aria-label="Default select example" id="selector-religion">
+                            <option value="32">Agnostic</option>
+                            <option value="33">Atheist</option>
+                            <option value="34">Buddhist</option>
+                            <option value="35">Eastern Orthodox</option>
+                            <option value="36">Hindu, Jain, or Sikh</option>
+                            <option value="37">Humanist</option>
+                            <option value="38">Jewish</option>
+                            <option value="39">Muslim</option>
+                            <option value="40">None/Nonreligious</option>
+                            <option value="41">Protestant
+                            <option value="42">Roman Catholic</option>
+                            <option value="43">Unitarian Universalist</option>
+                            <option value="44">Other</option>
+                            <option value="0" selected>Prefer not to answer</option>
+                        </select>
+                    </div>
+                </div>
             </div>
-            <hr>
+
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="selector-gender">Gender Identity and Sexual Orientation</label>
+                        <select class="form-select" aria-label="Default select example" id="selector-gender">
+                            <option value="15">Female</option>
+                            <option value="16">Male</option>
+                            <option value="17">Transgender</option>
+                            <option value="18">Gender Queer</option>
+                            <option value="19">Gender Non-Conforming</option>
+                            <option value="20">Gender Non-Binary</option>
+                            <option value="21">Lesbian</option>
+                            <option value="22">Gay</option>
+                            <option value="23">Bisexual</option>
+                            <option value="24">Queer</option>
+                            <option value="25">Pansexual</option>
+                            <option value="26">Asexual</option>
+                            <option value="27">Agender</option>
+                            <option value="28">Demisexual</option>
+                            <option value="29">Straight</option>
+                            <option value="30">Intersex</option>
+                            <option value="31">Two-Spirit</option>
+                            <option value="0" selected>Prefer not to answer</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="selector-race">Race, Ethnicity and National of Origin</label>
+                        <select class="form-select" aria-label="Default select example" id="selector-race">
+                            <option value="5">Person of Color</option>
+                            <option value="6">Black</option>
+                            <option value="7">Indigenous/Native American</option>
+                            <option value="8">Latinx</option>
+                            <option value="9">Asian/Pacific Islander</option>
+                            <option value="10">White</option>
+                            <option value="11">Middle Eastern/North African/Arab</option>
+                            <option value="12">Multiracial / Two or more races</option>
+                            <option value="13">Immigrant</option>
+                            <option value="14">Foreign Born Person</option>
+                            <option value="0" selected>Prefer not to answer</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="selector-disability">Person with a disability</label>
+                        <select class="form-select" aria-label="Default select example" id="selector-disability">
+                            <option value="45">Cognitive</option>
+                            <option value="46">Emotional</option>
+                            <option value="47">Hearing</option>
+                            <option value="48">Mental</option>
+                            <option value="49">Physical</option>
+                            <option value="50">Visual</option>
+                            <option value="0" selected>Prefer not to answer</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="selector-socioeconomy">Socioeconomic Class</label>
+                        <select class="form-select" aria-label="Default select example" id="selector-socioeconomy">
+                            <option value="51">Working class</option>
+                            <option value="52">Lower middle class</option>
+                            <option value="53">Upper middle class</option>
+                            <option value="54">Upper class</option>
+                            <option value="0" selected>Prefer not to answer</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+
+        </div>
+
+
+        <div class="row">
             <div class="form-group">
                 <h6>Description</h6>
                 <textarea class=" form-control mx-2" id='description' placeholder='Description' required
                           style="width: 100%"></textarea>
             </div>
-
-
-            <div style="padding-left: 30%">
-                <button type="button" class="btn btn-primary " onclick="saveData()">Save</button>
-                <button type="button" class="btn btn-danger " onclick="cancelSave()">Cancel</button>
+        </div>
+        <div class="row">
+            <div class="col-md-6 offset-md-6">
+                <button style="margin-left: 1rem" type="button" class="btn btn-primary " onclick="saveData()">Save
+                </button>
+                <button style="margin-left: 1rem" type="button" class="btn btn-danger " onclick="cancelSave()">Cancel
+                </button>
             </div>
         </div>
+
+
     </form>
 
 </div>
@@ -82,26 +189,136 @@
 <div id="filterPopUp" class="filter-pop-up">
     <form id="formFilter">
         <div class="container">
-            <h4>Filter Location</h4>
-            <h6>Tags</h6>
+            <h4>Filter Locations</h4>
             <hr>
+            <h6>User Details</h6>
             <div class="row">
-                <select class="mul-select" multiple="multiple" id="multiSelectFilter">
-                    <option value="0">Hotel</option>
-                    <option value="1">Restaurant</option>
-                    <option value="2">Club</option>
-                    <option value="3">Shopping Complex</option>
-                    <option value="4">Temple</option>
-                    <option value="5">Hospital</option>
-                    <option value="6">School</option>
-                </select>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="selector-filter-age">Age</label>
+                        <select class="form-select" aria-label="Default select example" id="selector-filter-age">
+                            <option value="-1" selected>Filter not selected</option>
+                            <option value="1">0-19</option>
+                            <option value="2">20-39</option>
+                            <option value="3">40-60</option>
+                            <option value="4">61+</option>
+                            <option value="0">Prefer not to answer</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="selector-filter-religion">Religion and Spirituality</label>
+                        <select class="form-select" aria-label="Default select example" id="selector-filter-religion">
+                            <option value="-1" selected>Filter not selected</option>
+                            <option value="32">Agnostic</option>
+                            <option value="33">Atheist</option>
+                            <option value="34">Buddhist</option>
+                            <option value="35">Eastern Orthodox</option>
+                            <option value="36">Hindu, Jain, or Sikh</option>
+                            <option value="37">Humanist</option>
+                            <option value="38">Jewish</option>
+                            <option value="39">Muslim</option>
+                            <option value="40">None/Nonreligious</option>
+                            <option value="41">Protestant
+                            <option value="42">Roman Catholic</option>
+                            <option value="43">Unitarian Universalist</option>
+                            <option value="44">Other</option>
+                            <option value="0">Prefer not to answer</option>
+                        </select>
+                    </div>
+                </div>
             </div>
-            <div class="row pt-5">
-                <div class="col-md-4 ">
+
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="selector-filter-gender">Gender Identity and Sexual Orientation</label>
+                        <select class="form-select" aria-label="Default select example" id="selector-filter-gender">
+                            <option value="-1" selected>Filter not selected</option>
+                            <option value="15">Female</option>
+                            <option value="16">Male</option>
+                            <option value="17">Transgender</option>
+                            <option value="18">Gender Queer</option>
+                            <option value="19">Gender Non-Conforming</option>
+                            <option value="20">Gender Non-Binary</option>
+                            <option value="21">Lesbian</option>
+                            <option value="22">Gay</option>
+                            <option value="23">Bisexual</option>
+                            <option value="24">Queer</option>
+                            <option value="25">Pansexual</option>
+                            <option value="26">Asexual</option>
+                            <option value="27">Agender</option>
+                            <option value="28">Demisexual</option>
+                            <option value="29">Straight</option>
+                            <option value="30">Intersex</option>
+                            <option value="31">Two-Spirit</option>
+                            <option value="0">Prefer not to answer</option>
+                        </select>
+                    </div>
                 </div>
-                <div class="col-md-8 d-flex justify-content-around">
-                    <button type="button" class="btn btn-danger" onclick="cancelFilter()">Cancel</button>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="selector-filter-race">Race, Ethnicity and National of Origin</label>
+                        <select class="form-select" aria-label="Default select example" id="selector-filter-race">
+                            <option value="-1" selected>Filter not selected</option>
+                            <option value="5">Person of Color</option>
+                            <option value="6">Black</option>
+                            <option value="7">Indigenous/Native American</option>
+                            <option value="8">Latinx</option>
+                            <option value="9">Asian/Pacific Islander</option>
+                            <option value="10">White</option>
+                            <option value="11">Middle Eastern/North African/Arab</option>
+                            <option value="12">Multiracial / Two or more races</option>
+                            <option value="13">Immigrant</option>
+                            <option value="14">Foreign Born Person</option>
+                            <option value="0">Prefer not to answer</option>
+                        </select>
+                    </div>
                 </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="selector-filter-disability">Person with a disability</label>
+                        <select class="form-select" aria-label="Default select example" id="selector-filter-disability">
+                            <option value="-1" selected>Filter not selected</option>
+                            <option value="45">Cognitive</option>
+                            <option value="46">Emotional</option>
+                            <option value="47">Hearing</option>
+                            <option value="48">Mental</option>
+                            <option value="49">Physical</option>
+                            <option value="50">Visual</option>
+                            <option value="0">Prefer not to answer</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="selector-filter-socioeconomy">Socioeconomic Class</label>
+                        <select class="form-select" aria-label="Default select example"
+                                id="selector-filter-socioeconomy">
+                            <option value="-1" selected>Filter not selected</option>
+                            <option value="51">Working class</option>
+                            <option value="52">Lower middle class</option>
+                            <option value="53">Upper middle class</option>
+                            <option value="54">Upper class</option>
+                            <option value="0">Prefer not to answer</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6 offset-md-6">
+                        <button style="margin-left: 1rem" type="button" class="btn btn-primary "
+                                onclick="resetFilter()">Reset
+                        </button>
+                        <button style="margin-left: 1rem" type="button" class="btn btn-danger "
+                                onclick="cancelFilter()">Cancel
+                        </button>
+                    </div>
+                </div>
+
             </div>
         </div>
     </form>

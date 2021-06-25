@@ -40,12 +40,21 @@ function initMap() {
         marker && marker.setMap(null)
         document.getElementById('filterPopUp').classList.remove('filter-pop-up');
         document.getElementById('filterPopUp').classList.add('grow-filter-pop-up');
-        $(".mul-select").select2({
-            placeholder: "select tags", //placeholder
-            tags: true,
-            tokenSeparators: ['/', ',', ';', " "],
-            allowClear: true
-        });
+        setTimeout(() => {
+            let filteredLoc = allSavedLocations.filter(ele =>
+                parseInt(ele.age) === 0 &&
+                parseInt(ele.race) === 0 &&
+                parseInt(ele.gender) === 0 &&
+                parseInt(ele.religion) === 0 &&
+                parseInt(ele.disability) === 0 &&
+                parseInt(ele.socioeconomic) === 0)
+            allSavedMarkers.forEach(marker => {
+                marker.setMap(null)
+            })
+            if (filteredLoc && filteredLoc.length != 0) {
+                setAllMarkers(filteredLoc);
+            }
+        }, 10)
     });
 
     //load saved locations
@@ -107,114 +116,119 @@ function filter() {
     map.addListener('click', (event) => {
         document.getElementById('filterPopUp').classList.remove('grow-filter-pop-up');
         document.getElementById('filterPopUp').classList.add('filter-pop-up');
-        $("#multiSelectFilter").val(null).trigger("change");
-        setAllMarkers(allSavedUniqueLoc);
+        document.getElementById('formFilter').reset();
+        setAllMarkers(allSavedLocations);
     });
 
-    $('#multiSelectFilter').on('change', function (e) {
-        var strTagsArray = $('#multiSelectFilter').val() && $('#multiSelectFilter').val();
-        if (strTagsArray && strTagsArray.length != 0) {
-            var tagsArray = strTagsArray.map(ele => parseInt(ele));
-            marker && marker.setMap(null)
-            //remove all markers
-            allSavedMarkers.forEach(marker => {
-                marker.setMap(null)
-            })
+    $(document).on('change', '#filterPopUp select', (event) => {
+        const age = parseInt($('#selector-filter-age').val());
+        const race = parseInt($('#selector-filter-race').val());
+        const religion = parseInt($('#selector-filter-religion').val());
+        const gender = parseInt($('#selector-filter-gender').val());
+        const disability = parseInt($('#selector-filter-disability').val());
+        const socioeconomic = parseInt($('#selector-filter-socioeconomy').val());
 
-            tagsArray.forEach(tag => {
-                let filteredLoc = allSavedLocations.filter(ele => parseInt(ele.tag_id) === tag)
-                if (filteredLoc && filteredLoc.length != 0) {
-                    let markerLocations = [];
-                    markerLocations.push(filteredLoc[0]);
-                    filteredLoc.forEach(ele => {
-                        let tem = markerLocations;
-                        let ispresent = false;
-                        tem.forEach(e => {
-                            if (e.id === ele.id) {
-                                ispresent = true;
-                            }
-                        })
-                        !ispresent && markerLocations.push(ele);
-                    })
-                    setAllMarkers(markerLocations);
+        const filterMaps = {};
+        if (age !== -1) filterMaps['age'] = age;
+        if (race !== -1) filterMaps['race'] = race;
+        if (religion !== -1) filterMaps['religion'] = religion;
+        if (gender !== -1) filterMaps['gender'] = gender;
+        if (disability !== -1) filterMaps['disability'] = disability;
+        if (socioeconomic !== -1) filterMaps['socioeconomic'] = socioeconomic;
+
+
+        marker && marker.setMap(null);
+        //remove all markers
+        allSavedMarkers.forEach(marker => {
+            marker.setMap(null)
+        })
+        let filteredLoc = [];
+        allSavedLocations.forEach(location => {
+            let isLocationFiltered = false;
+            for (let key of Object.keys(filterMaps)) {
+                if (filterMaps[key] === parseInt(location[key])) {
+                    isLocationFiltered = true;
+                    break;
+                    p
                 }
-            })
+            }
+            if (isLocationFiltered) {
+                filteredLoc.push(location);
+            }
+        })
 
-        } else {
-            setAllMarkers(allSavedUniqueLoc)
+        if (filteredLoc && filteredLoc.length != 0) {
+            setAllMarkers(filteredLoc);
         }
-    });
+    })
 }
 
 function saveData() {
     const description = document.getElementById('description').value;
-    let tagsArray = $('#multiSelect').val();
-    let isTagSet = false;
-    if (tagsArray && tagsArray.length != 0) {
-        tagsArray = tagsArray.map(ele => parseInt(ele))
-        isTagSet = true;
-    }
+    const age = document.getElementById('selector-age').value;
+    const race = document.getElementById('selector-race').value;
+    const gender = document.getElementById('selector-gender').value;
+    const religion = document.getElementById('selector-religion').value;
+    const disability = document.getElementById('selector-disability').value;
+    const socioeconomy = document.getElementById('selector-socioeconomy').value;
+
     if (marker) {
-        if (isTagSet) {
-            if (description != '') {
-                const position = marker.getPosition().toJSON()
-                const tags = tagsArray
-                const dataObj = {
-                    position,
-                    des: description,
-                    tags
-                }
-                $.post("php/saveLocations.php", {
-                    dataObj
-                }, (data, status) => {
-                    if (status === "success") {
-                        document.getElementById('popUp').classList.remove('grow-pop-up');
-                        document.getElementById('popUp').classList.add('pop-up');
-                        document.getElementById("form").reset();
-                        $("#multiSelect").val(null).trigger("change");
-                        setTimeout(() => {
-                            $('#toast-warning strong').html("Succes");
-                            $('#toast-warning p').html("Succesfully Saved the location");
-                            $('#toast-warning').removeClass('alert-danger');
-                            $('#toast-warning').addClass('alert-success');
-                            $('#toast-header-warning').css({'background-color': '#b6e86d'});
-                            $('#toast-warning').css({'left': '20px', 'transition-duration': '0.5s'});
-                        }, 900)
-
-                        setTimeout(() => {
-                            $('#toast-warning').css({'left': '-400px', 'transition-duration': '0.5s'});
-                        }, 3900)
-
-
-                        setTimeout(() => {
-                            $('#toast-warning').removeClass('alert-success');
-                            $('#toast-warning').addClass('alert-danger');
-                            $('#toast-header-warning').css({'background-color': '#eb9994'});
-                            $('#toast-warning strong').html("Warning");
-                        }, 4400)
-                    } else {
-                        $('#toast-warning p').html("Error occurred in saving location!");
-                        $('#toast-warning').css({'left': '20px', 'transition-duration': '0.5s'});
-                        setTimeout(() => {
-                            $('#toast-warning').css({'left': '-400px', 'transition-duration': '0.5s'});
-                        }, 3000)
-                    }
-
-                })
-            } else {
-                $('#toast-warning p').html("Please enter a description");
-                $('#toast-warning').css({'left': '20px', 'transition-duration': '0.5s'});
-                setTimeout(() => {
-                    $('#toast-warning').css({'left': '-400px', 'transition-duration': '0.5s'});
-                }, 3000)
+        if (description != '') {
+            const position = marker.getPosition().toJSON()
+            const dataObj = {
+                position,
+                des: description,
+                age,
+                race,
+                gender,
+                religion,
+                disability,
+                socioeconomy
             }
+            $.post("php/saveLocations.php", {
+                dataObj
+            }, (data, status) => {
+                if (status === "success") {
+                    document.getElementById('popUp').classList.remove('grow-pop-up');
+                    document.getElementById('popUp').classList.add('pop-up');
+                    document.getElementById("form").reset();
+                    setTimeout(() => {
+                        $('#toast-warning strong').html("Succes");
+                        $('#toast-warning p').html("Succesfully Saved the location");
+                        $('#toast-warning').removeClass('alert-danger');
+                        $('#toast-warning').addClass('alert-success');
+                        $('#toast-header-warning').css({'background-color': '#b6e86d'});
+                        $('#toast-warning').css({'left': '20px', 'transition-duration': '0.5s'});
+                    }, 900)
+
+                    setTimeout(() => {
+                        $('#toast-warning').css({'left': '-400px', 'transition-duration': '0.5s'});
+                    }, 3900)
+
+
+                    setTimeout(() => {
+                        $('#toast-warning').removeClass('alert-success');
+                        $('#toast-warning').addClass('alert-danger');
+                        $('#toast-header-warning').css({'background-color': '#eb9994'});
+                        $('#toast-warning strong').html("Warning");
+                    }, 4400)
+                } else {
+                    $('#toast-warning p').html("Error occurred in saving location!");
+                    $('#toast-warning').css({'left': '20px', 'transition-duration': '0.5s'});
+                    setTimeout(() => {
+                        $('#toast-warning').css({'left': '-400px', 'transition-duration': '0.5s'});
+                    }, 3000)
+                }
+
+            })
         } else {
-            $('#toast-warning p').html("Please select a tag");
+            $('#toast-warning p').html("Please enter a description");
             $('#toast-warning').css({'left': '20px', 'transition-duration': '0.5s'});
             setTimeout(() => {
                 $('#toast-warning').css({'left': '-400px', 'transition-duration': '0.5s'});
             }, 3000)
         }
+
     } else {
         $('#toast-warning p').html("Please select a location in the map");
         $('#toast-warning').css({'left': '20px', 'transition-duration': '0.5s'});
@@ -228,21 +242,8 @@ function loadALlSavedLocations() {
     $.get("php/loadLocations.php", {flag: 1}, (data, status) => {
         const res = JSON.parse(data)
         allSavedLocations = res;
-        let markerLocations = [];
-        markerLocations.push(res[0]);
-        res.forEach(ele => {
-            let tem = markerLocations;
-            let ispresent = false;
-            tem.forEach(e => {
-                if (e.id === ele.id) {
-                    ispresent = true;
-                }
-            })
-            !ispresent && markerLocations.push(ele);
-        })
-        allSavedUniqueLoc = markerLocations;
         setTimeout(() => {
-            markerLocations.forEach(marker => {
+            allSavedLocations.forEach(marker => {
                 const lat = parseFloat(marker.latitude)
                 const lng = parseFloat(marker.longitude)
                 const infoWindowString = `<div id="content">
@@ -275,24 +276,35 @@ function loadALlSavedLocations() {
 function cancelSave() {
     document.getElementById('popUp').classList.remove('grow-pop-up');
     document.getElementById('popUp').classList.add('pop-up');
-    $("#multiSelect").val(null).trigger("change");
     document.getElementById("form").reset();
+
 }
 
 function cancelFilter() {
     marker && marker.setMap(map)
     document.getElementById('filterPopUp').classList.remove('grow-filter-pop-up');
     document.getElementById('filterPopUp').classList.add('filter-pop-up');
-    $("#multiSelectFilter").val(null).trigger("change");
-    setAllMarkers(allSavedUniqueLoc);
+    document.getElementById('formFilter').reset();
+    setAllMarkers(allSavedLocations);
 }
 
-function cancelSignIn() {
-    $('#sign-in-popup').css({'visibility': 'hidden'});
-    setTimeout(() => {
-        $('#sign-in-popup input').val(null);
-    }, 2000)
+function resetFilter() {
+    document.getElementById('formFilter').reset();
+    let filteredLoc = allSavedLocations.filter(ele =>
+        parseInt(ele.age) === 0 &&
+        parseInt(ele.race) === 0 &&
+        parseInt(ele.gender) === 0 &&
+        parseInt(ele.religion) === 0 &&
+        parseInt(ele.disability) === 0 &&
+        parseInt(ele.socioeconomic) === 0)
+    allSavedMarkers.forEach(marker => {
+        marker.setMap(null)
+    })
+    if (filteredLoc && filteredLoc.length != 0) {
+        setAllMarkers(filteredLoc);
+    }
 }
+
 
 initMap()
 

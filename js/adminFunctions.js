@@ -85,7 +85,6 @@ function loadALlSavedLocations(flag) {
 
         }
     })
-
 }
 
 function placeMarker(location) {
