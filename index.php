@@ -328,7 +328,7 @@
 <div id="map" style="position: relative;width: 100%"></div>
 
 <!-- Async script executes immediately and must be after any DOM elements used in callback. -->
-<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA3bi8qGhZSYcpAe1EanToEpFL2T2Z9iiE&callback=initMap&libraries=&v=weekly"
+<script src="https://maps.googleapis.com/maps/api/js?keyapi_key&callback=initMap&libraries=&v=weekly"
         async></script>
 
 
