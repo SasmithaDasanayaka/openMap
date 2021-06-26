@@ -2,7 +2,6 @@ let map;
 let marker;
 let allSavedLocations;
 let allSavedMarkers = [];
-let allSavedUniqueLoc = [];
 
 function initMap() {
     map = new google.maps.Map(document.getElementById("map"), {
@@ -37,24 +36,9 @@ function initMap() {
     FilterControl(filterControlDiv, map);
     map.controls[google.maps.ControlPosition.RIGHT_TOP].push(filterControlDiv);
     filterControlDiv.addEventListener('click', (e) => {
-        marker && marker.setMap(null)
+        marker && marker.setMap(null);
         document.getElementById('filterPopUp').classList.remove('filter-pop-up');
         document.getElementById('filterPopUp').classList.add('grow-filter-pop-up');
-        setTimeout(() => {
-            let filteredLoc = allSavedLocations.filter(ele =>
-                parseInt(ele.age) === 0 &&
-                parseInt(ele.race) === 0 &&
-                parseInt(ele.gender) === 0 &&
-                parseInt(ele.religion) === 0 &&
-                parseInt(ele.disability) === 0 &&
-                parseInt(ele.socioeconomic) === 0)
-            allSavedMarkers.forEach(marker => {
-                marker.setMap(null)
-            })
-            if (filteredLoc && filteredLoc.length != 0) {
-                setAllMarkers(filteredLoc);
-            }
-        }, 10)
     });
 
     //load saved locations
@@ -116,8 +100,6 @@ function filter() {
     map.addListener('click', (event) => {
         document.getElementById('filterPopUp').classList.remove('grow-filter-pop-up');
         document.getElementById('filterPopUp').classList.add('filter-pop-up');
-        document.getElementById('formFilter').reset();
-        setAllMarkers(allSavedLocations);
     });
 
     $(document).on('change', '#filterPopUp select', (event) => {
@@ -136,12 +118,18 @@ function filter() {
         if (disability !== -1) filterMaps['disability'] = disability;
         if (socioeconomic !== -1) filterMaps['socioeconomic'] = socioeconomic;
 
+        if (age === -1 && race === -1 && religion === -1 && gender === -1 && disability === -1 && socioeconomic === -1) {
+            allSavedMarkers.forEach(marker => {
+                marker.setMap(map)
+            })
+        } else {
+            allSavedMarkers.forEach(marker => {
+                marker.setMap(null)
+            })
+        }
 
         marker && marker.setMap(null);
-        //remove all markers
-        allSavedMarkers.forEach(marker => {
-            marker.setMap(null)
-        })
+
         let filteredLoc = [];
         allSavedLocations.forEach(location => {
             let isLocationFiltered = false;
@@ -192,6 +180,11 @@ function saveData() {
                     document.getElementById('popUp').classList.remove('grow-pop-up');
                     document.getElementById('popUp').classList.add('pop-up');
                     document.getElementById("form").reset();
+                    let temMarkers = new google.maps.Marker({
+                        position,
+                        map: map,
+                        icon: 'http://chart.googleapis.com/chart?chst=d_map_pin_letter&chld=%7c34eb4f%7c000000&.png'
+                    });
                     setTimeout(() => {
                         $('#toast-warning strong').html("Succes");
                         $('#toast-warning p').html("Succesfully Saved the location");
@@ -203,6 +196,7 @@ function saveData() {
 
                     setTimeout(() => {
                         $('#toast-warning').css({'left': '-400px', 'transition-duration': '0.5s'});
+
                     }, 3900)
 
 
@@ -242,35 +236,32 @@ function loadALlSavedLocations() {
     $.get("php/loadLocations.php", {flag: 1}, (data, status) => {
         const res = JSON.parse(data)
         allSavedLocations = res;
-        setTimeout(() => {
-            allSavedLocations.forEach(marker => {
-                const lat = parseFloat(marker.latitude)
-                const lng = parseFloat(marker.longitude)
-                const infoWindowString = `<div id="content">
+        allSavedLocations.forEach(marker => {
+            const lat = parseFloat(marker.latitude)
+            const lng = parseFloat(marker.longitude)
+            const infoWindowString = `<div id="content">
                                             <div id="siteNotice">
                                                 ${marker.description}
                                             </div>
                                            </div>`;
-                const infowindow = new google.maps.InfoWindow({
-                    content: infoWindowString,
+            const infowindow = new google.maps.InfoWindow({
+                content: infoWindowString,
+            });
+            let markers = new google.maps.Marker({
+                position: {lat, lng},
+                map: map,
+                title: marker.description,
+            });
+            markers.addListener("click", () => {
+                infowindow.open({
+                    anchor: markers,
+                    map,
+                    shouldFocus: false,
                 });
-                let markers = new google.maps.Marker({
-                    position: {lat, lng},
-                    map: map,
-                    title: marker.description,
-                });
-                markers.addListener("click", () => {
-                    infowindow.open({
-                        anchor: markers,
-                        map,
-                        shouldFocus: false,
-                    });
-                });
-                allSavedMarkers.push(markers)
-            })
-        }, 2000)
+            });
+            allSavedMarkers.push(markers)
+        })
     })
-
 }
 
 function cancelSave() {
@@ -290,19 +281,9 @@ function cancelFilter() {
 
 function resetFilter() {
     document.getElementById('formFilter').reset();
-    let filteredLoc = allSavedLocations.filter(ele =>
-        parseInt(ele.age) === 0 &&
-        parseInt(ele.race) === 0 &&
-        parseInt(ele.gender) === 0 &&
-        parseInt(ele.religion) === 0 &&
-        parseInt(ele.disability) === 0 &&
-        parseInt(ele.socioeconomic) === 0)
     allSavedMarkers.forEach(marker => {
-        marker.setMap(null)
+        marker.setMap(map)
     })
-    if (filteredLoc && filteredLoc.length != 0) {
-        setAllMarkers(filteredLoc);
-    }
 }
 
 

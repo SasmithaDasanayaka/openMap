@@ -3,6 +3,7 @@ let marker;
 let allAcceptLocations;
 let allAcceptUniqueLoc = [];
 let selectedFlag = 0;
+const filtersArray = ["Prefer not to answer", "0-19", "20-39", "40-60", "61+", "Person of Color", "Black", "Indigenous/Native American", "Latinx", "Asian/Pacific Islander", "White", "Middle Eastern/North African/Arab", "Multiracial / Two or more races", "Immigrant", "Foreign Born Person", "Female", "Male", "Transgender", "Gender Queer", "Gender Non-Conforming", "Gender Non-Binary", "Lesbian", "Gay", "Bisexual", "Queer", "Pansexual", "Asexual", "Agender", "Demisexual", "Straight", "Intersex", "Two-Spirit", "Agnostic", "Atheist", "Buddhist", "Eastern Orthodox", "Hindu, Jain, or Sikh", "Humanist", "Jewish", "Muslim", "None/Nonreligious", "Protestant", "Roman Catholic", "Unitarian Universalist", "Other", "Cognitive", "Emotional", "Hearing", "Mental", "Physical", "Visual", "Working class", "Lower middle class", "Upper middle class", "Upper class"]
 
 
 function initMap() {
@@ -35,8 +36,9 @@ function loadALlSavedLocations(flag) {
             })
             allAcceptUniqueLoc = markerLocations;
             allAcceptUniqueLoc.forEach(ele => {
+                    const toottipTitle = `Age: ${filtersArray[parseInt(ele.age)]},Religion: ${filtersArray[parseInt(ele.religion)]}, Gender: ${filtersArray[parseInt(ele.gender)]},&#013; Race: ${filtersArray[parseInt(ele.race)]}, Disability: ${filtersArray[parseInt(ele.disability)]}, Socioeconomic class: ${filtersArray[parseInt(ele.socioeconomic)]}`.replace(/[ ]/g, "\u00a0");
                     if (flag === 0) {
-                        $("#table-id tbody").append("<tr scope='row'>" +
+                        $("#table-id tbody").append(`<tr scope='row' data-toggle='tooltip' data-placement='bottom' title=${toottipTitle} data-html="true"> ` +
                             `<td id=table-${ele.id} > ` + ele.id + "</td>" +
                             "<td>" + ele.longitude + "</td>" +
                             "<td>" + ele.latitude + "</td>" +
@@ -62,7 +64,7 @@ function loadALlSavedLocations(flag) {
                             reject(ele.id);
                         })
                     } else if (flag === 2) {
-                        $("#table-id tbody").append("<tr scope='row'>" +
+                        $("#table-id tbody").append(`<tr scope='row' data-toggle='tooltip' data-placement='bottom' title=${toottipTitle}>` +
                             `<td id=table-${ele.id} > ` + ele.id + "</td>" +
                             "<td>" + ele.longitude + "</td>" +
                             "<td>" + ele.latitude + "</td>" +
@@ -79,6 +81,7 @@ function loadALlSavedLocations(flag) {
                             placeMarker(temLocation);
                         })
                     }
+
 
                 }
             )
@@ -118,6 +121,7 @@ function accept(location_id) {
             $('#toast-warning').addClass('alert-success');
             $('#toast-header-warning').css({'background-color': '#b6e86d'});
             $('#toast-warning').css({'left': '20px', 'transition-duration': '0.5s'});
+            $('#refresh').click();
         }, 900)
 
         setTimeout(() => {
@@ -135,6 +139,7 @@ function reject(location_id) {
             $('#toast-warning').addClass('alert-success');
             $('#toast-header-warning').css({'background-color': '#b6e86d'});
             $('#toast-warning').css({'left': '20px', 'transition-duration': '0.5s'});
+            $('#refresh').click();
         }, 900)
 
         setTimeout(() => {

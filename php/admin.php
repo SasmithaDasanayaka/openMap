@@ -10,7 +10,8 @@ if (!isset($_SESSION['is_user_set'])) {
 
 <head>
     <meta charset="UTF-8">
-    <title>xplomate</title>
+    <title>mapthebelonging</title>
+    <link rel="shortcut icon" href="../assets/favicon.ico" type="image/x-icon">
     <script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet"
           integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x" crossorigin="anonymous">
@@ -38,7 +39,7 @@ if (!isset($_SESSION['is_user_set'])) {
 
 <body>
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-    <a class="navbar-brand" href="#">XPlomate</a>
+    <a class="navbar-brand" href="#">mapthebelonging</a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
             aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
@@ -87,7 +88,7 @@ if (!isset($_SESSION['is_user_set'])) {
 </div>
 
 <!-- Async script executes immediately and must be after any DOM elements used in callback. -->
-<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA8nueSoOhRCDTTw4Wjxt1CyRd3JavCSUQ&callback=initMap&libraries=&v=weekly"
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA3bi8qGhZSYcpAe1EanToEpFL2T2Z9iiE&callback=initMap&libraries=&v=weekly"
         async></script>
 
 </body>

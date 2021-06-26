@@ -3,7 +3,8 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>xplomate</title>
+    <title>mapthebelonging</title>
+    <link rel="shortcut icon" href="./assets/favicon.ico" type="image/x-icon">
     <script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
     <!-- CSS only -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet"
@@ -77,7 +78,7 @@
                             <option value="38">Jewish</option>
                             <option value="39">Muslim</option>
                             <option value="40">None/Nonreligious</option>
-                            <option value="41">Protestant
+                            <option value="41">Protestant</option>
                             <option value="42">Roman Catholic</option>
                             <option value="43">Unitarian Universalist</option>
                             <option value="44">Other</option>
@@ -174,7 +175,7 @@
         </div>
         <div class="row">
             <div class="col-md-6 offset-md-6">
-                <button style="margin-left: 1rem" type="button" class="btn btn-primary " onclick="saveData()">Save
+                <button style="margin-left: 30%" type="button" class="btn btn-primary " onclick="saveData()">Save
                 </button>
                 <button style="margin-left: 1rem" type="button" class="btn btn-danger " onclick="cancelSave()">Cancel
                 </button>
@@ -310,7 +311,7 @@
 
                 <div class="row">
                     <div class="col-md-6 offset-md-6">
-                        <button style="margin-left: 1rem" type="button" class="btn btn-primary "
+                        <button style="margin-left: 30%" type="button" class="btn btn-primary "
                                 onclick="resetFilter()">Reset
                         </button>
                         <button style="margin-left: 1rem" type="button" class="btn btn-danger "
@@ -327,7 +328,7 @@
 <div id="map" style="position: relative;width: 100%"></div>
 
 <!-- Async script executes immediately and must be after any DOM elements used in callback. -->
-<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA8nueSoOhRCDTTw4Wjxt1CyRd3JavCSUQ&callback=initMap&libraries=&v=weekly"
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA3bi8qGhZSYcpAe1EanToEpFL2T2Z9iiE&callback=initMap&libraries=&v=weekly"
         async></script>
 
 

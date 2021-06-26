@@ -52,3 +52,11 @@ i {
     height: 30px;
     background-color: #eb9994;
 }
+
+tr {
+    cursor: pointer;
+}
+
+.tooltip-inner {
+    white-space: pre-wrap;
+}
