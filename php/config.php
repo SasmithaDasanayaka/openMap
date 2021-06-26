@@ -1,9 +1,9 @@
 <?php
 
 $servername = "localhost";
-$username = "mapthing_db_map";
-$password = "Zg(RVUyh+!H&";
-$dbname = "mapthing_map_project";
+$username = "username";
+$password = "pw";
+$dbname = "map_project";
 
-$admin_username = 'mapthing_admin';
-$admin_password = 'Zg(RVUyh+!H&';
+$admin_username = 'admin_username';
+$admin_password = 'admin_pw';
